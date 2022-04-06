@@ -19,7 +19,9 @@ include:
 sdk: {id: gecko_sdk, version: 4.0.2}
 toolchain_settings: []
 component:
+- {id: emlib_iadc}
 - {id: app_log}
+- {id: emlib_ldma}
 - {id: bluetooth_feature_connection}
 - {id: bluetooth_feature_gatt_server}
 - {id: bluetooth_feature_advertiser}

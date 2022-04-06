@@ -97,7 +97,7 @@ app.o: ../app.c \
  /Users/clfilho/SimplicityStudio/SDKs/gecko_sdk2//protocol/bluetooth/inc/sl_bt_api_compatibility.h \
  /Users/clfilho/SimplicityStudio/v5_workspace/SoilMoistureSensorCentral/autogen/gatt_db.h \
  /Users/clfilho/SimplicityStudio/SDKs/gecko_sdk2//protocol/bluetooth/inc/sli_bt_gattdb_def.h \
- ../app.h
+ ../app.h ../LedStripSPI.h
 /Users/clfilho/SimplicityStudio/SDKs/gecko_sdk2//platform/common/toolchain/inc/sl_gcc_preinclude.h:
 /Users/clfilho/SimplicityStudio/SDKs/gecko_sdk2//platform/emlib/inc/em_common.h:
 /Users/clfilho/SimplicityStudio/SDKs/gecko_sdk2//platform/Device/SiliconLabs/EFR32BG22/Include/em_device.h:
@@ -197,3 +197,4 @@ app.o: ../app.c \
 /Users/clfilho/SimplicityStudio/v5_workspace/SoilMoistureSensorCentral/autogen/gatt_db.h:
 /Users/clfilho/SimplicityStudio/SDKs/gecko_sdk2//protocol/bluetooth/inc/sli_bt_gattdb_def.h:
 ../app.h:
+../LedStripSPI.h:

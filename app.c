@@ -32,6 +32,7 @@
 #include "sl_bluetooth.h"
 #include "gatt_db.h"
 #include "app.h"
+#include "LedStripSPI.h"
 
 // The advertising set handle allocated from Bluetooth stack.
 
@@ -55,6 +56,9 @@ static uint8_t ConInnProcessTimeCounter = 0;
 
 #define CENTRAL_SOFTTIMER_HANDLER 0xFE
 
+#define PROBE_TIME 3
+#define DRYSOIL 45000
+
 typedef enum CentralStages
 {
       Disabled,
@@ -64,6 +68,7 @@ typedef enum CentralStages
       Connection_in_Process,
       Connections_Completed,
       Collecting_Data
+
 }CENTRALSTAGES;
 
 typedef union {
@@ -97,10 +102,7 @@ const char DEVICE_NAME_STRING[] = "MoistSensor";//"Silabsxx:xx";
  *****************************************************************************/
 SL_WEAK void app_init(void)
 {
-  /////////////////////////////////////////////////////////////////////////////
-  // Put your additional application init code here!                         //
-  // This is called once during start-up.                                    //
-  /////////////////////////////////////////////////////////////////////////////
+  initLedStrip();
 }
 
 /**************************************************************************//**
@@ -285,7 +287,7 @@ void sl_bt_on_event(sl_bt_msg_t *evt)
              if (Central_State == Collecting_Data)
 
                {
-                 if(MinuteCounter++ >59)
+                 if(MinuteCounter++ >PROBE_TIME)
                    {
                      sl_bt_gatt_read_characteristic_value(1, 21);
                      MinuteCounter = 0;
@@ -328,12 +330,26 @@ void sl_bt_on_event(sl_bt_msg_t *evt)
 
     case sl_bt_evt_gatt_characteristic_value_id:
 
-      Sensor_data.array[0] = evt->data.evt_gatt_characteristic_value.value.data[0];
-      Sensor_data.array[1] = evt->data.evt_gatt_characteristic_value.value.data[1];
-      Sensor_data.array[2] = evt->data.evt_gatt_characteristic_value.value.data[2];
-      Sensor_data.array[3] = evt->data.evt_gatt_characteristic_value.value.data[3];
+      if (evt->data.evt_gatt_characteristic_value.characteristic == 21)
+        {
+          Sensor_data.array[0] = evt->data.evt_gatt_characteristic_value.value.data[0];
+          Sensor_data.array[1] = evt->data.evt_gatt_characteristic_value.value.data[1];
+          Sensor_data.array[2] = evt->data.evt_gatt_characteristic_value.value.data[2];
+          Sensor_data.array[3] = evt->data.evt_gatt_characteristic_value.value.data[3];
 
-      app_log("Moisture Sensor data = %d \n\r", Sensor_data.data );
+          app_log("Moisture Sensor data = %d \n\r", Sensor_data.data );
+
+          if (Sensor_data.data > DRYSOIL)
+            {
+              app_log("Soil Dry \n\r");
+              SetLedStriptoRGB(0xff,0,0);
+            }
+          else SetLedStriptoRGB(0,0,0);
+        }
+
+
+
+
 
       break;
     // -------------------------------
