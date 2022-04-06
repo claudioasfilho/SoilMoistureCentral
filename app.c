@@ -216,6 +216,7 @@ void sl_bt_on_event(sl_bt_msg_t *evt)
   //uint8_t conn_handle;
   //conn_properties_t* conn;
   _32BArray_Union_t Sensor_data;
+  static uint8_t MinuteCounter = 0;
 
 
   switch (SL_BT_MSG_ID(evt->header)) {
@@ -282,8 +283,15 @@ void sl_bt_on_event(sl_bt_msg_t *evt)
              }
 
              if (Central_State == Collecting_Data)
+
                {
-                 sl_bt_gatt_read_characteristic_value(1, 21);
+                 if(MinuteCounter++ >59)
+                   {
+                     sl_bt_gatt_read_characteristic_value(1, 21);
+                     MinuteCounter = 0;
+                   }
+
+
                }
 
 
@@ -312,6 +320,7 @@ void sl_bt_on_event(sl_bt_msg_t *evt)
 
 
       Change_Central_State(Collecting_Data);
+      MinuteCounter = 0;
 
 
 
